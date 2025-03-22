@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: social-media-user-service
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: ${POSTGRES_URL}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+server:
+  port: 8081
