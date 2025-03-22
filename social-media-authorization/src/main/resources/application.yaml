@@ -1,0 +1,6 @@
+spring:
+  application:
+    name : social-media-authorization
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
+
