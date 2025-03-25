@@ -3,4 +3,9 @@ spring:
     name : social-media-authorization
   kafka:
     bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
-
+jwt:
+  key: ${JWT_KEY}
+  access-token-expiration: 3600000
+  refresh-token-expiration: 86400000
+server:
+  port: 8082
