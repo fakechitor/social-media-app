@@ -28,6 +28,8 @@ dependencies {
     implementation("org.springframework.kafka:spring-kafka")
     implementation("org.postgresql:postgresql:42.7.5")
     implementation("org.mapstruct:mapstruct:1.6.3")
+    implementation("org.flywaydb:flyway-core:11.5.0")
+    runtimeOnly("org.flywaydb:flyway-database-postgresql:11.5.0")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.18.3")
     kapt("org.mapstruct:mapstruct-processor:1.6.3")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
