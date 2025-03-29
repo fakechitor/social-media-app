@@ -1,11 +1,9 @@
 package com.fakechitor.socialmediauserservice.controller
 
+import com.fakechitor.socialmediauserservice.dto.request.UserRegisterDto
 import com.fakechitor.socialmediauserservice.service.UserService
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("api/users")
@@ -24,4 +22,9 @@ class UserController(
     fun getUserByUsername(
         @PathVariable username: String,
     ) = ResponseEntity.ok(userService.findByUsername(username))
+
+    @PostMapping
+    fun saveUser(
+        @RequestBody userRegisterDto: UserRegisterDto,
+    ) = ResponseEntity.ok(userService.save(userRegisterDto))
 }
