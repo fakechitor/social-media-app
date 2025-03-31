@@ -16,9 +16,24 @@ services:
   kafka:
     image: apache/kafka:latest
     ports:
-      - 9092:9092
+      - "9092:9092"
+    volumes:
+      - kafka_data:/data
+    networks:
+      - social-media-app-network
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - social-media-app-network
+
 volumes:
   pg_data:
+  kafka_data:
+  redis_data:
 
 networks:
   social-media-app-network:
