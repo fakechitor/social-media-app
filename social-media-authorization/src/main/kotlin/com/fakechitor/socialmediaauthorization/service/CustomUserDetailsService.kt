@@ -1,6 +1,6 @@
 package com.fakechitor.socialmediaauthorization.service
 
-import com.fakechitor.socialmediaauthorization.dto.UserResponseDto
+import com.fakechitor.socialmediaauthorization.dto.response.UserResponseDto
 import org.springframework.security.core.userdetails.User
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService

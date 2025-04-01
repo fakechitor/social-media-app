@@ -1,4 +1,4 @@
-package com.fakechitor.socialmediaauthorization.dto
+package com.fakechitor.socialmediaauthorization.dto.request
 
 data class UserRegisterDto(
     val email: String,

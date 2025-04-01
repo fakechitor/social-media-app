@@ -1,7 +1,7 @@
 package com.fakechitor.socialmediaauthorization.service
 
-import com.fakechitor.socialmediaauthorization.dto.UserRegisterDto
-import com.fakechitor.socialmediaauthorization.dto.UserResponseDto
+import com.fakechitor.socialmediaauthorization.dto.request.UserRegisterDto
+import com.fakechitor.socialmediaauthorization.dto.response.UserResponseDto
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Service

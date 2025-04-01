@@ -31,7 +31,7 @@ class KafkaProducerConfig {
                 KEY_SERIALIZER_CLASS_CONFIG to StringSerializer::class.java,
                 VALUE_SERIALIZER_CLASS_CONFIG to JsonSerializer::class.java,
                 TYPE_MAPPINGS to
-                    "login:com.fakechitor.socialmediaauthorization.dto.UserLoginDto, register:com.fakechitor.socialmediaauthorization.dto.UserRegisterDto",
+                    "login:com.fakechitor.socialmediaauthorization.dto.request.UserLoginDto, register:com.fakechitor.socialmediaauthorization.dto.request.UserRegisterDto",
             ),
         )
 

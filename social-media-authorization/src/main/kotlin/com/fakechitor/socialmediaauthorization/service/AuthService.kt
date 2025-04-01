@@ -1,8 +1,8 @@
 package com.fakechitor.socialmediaauthorization.service
 
-import com.fakechitor.socialmediaauthorization.dto.UserLoginDto
-import com.fakechitor.socialmediaauthorization.dto.UserRegisterDto
-import com.fakechitor.socialmediaauthorization.dto.UserResponseDto
+import com.fakechitor.socialmediaauthorization.dto.request.UserLoginDto
+import com.fakechitor.socialmediaauthorization.dto.request.UserRegisterDto
+import com.fakechitor.socialmediaauthorization.dto.response.UserResponseDto
 import com.fakechitor.socialmediaauthorization.dto.response.AuthenticationResponse
 import com.fakechitor.socialmediaauthorization.property.JwtProperties
 import org.springframework.security.authentication.AuthenticationManager

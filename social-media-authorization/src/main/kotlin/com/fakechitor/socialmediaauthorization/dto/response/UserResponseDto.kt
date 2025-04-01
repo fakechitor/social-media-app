@@ -1,4 +1,4 @@
-package com.fakechitor.socialmediaauthorization.dto
+package com.fakechitor.socialmediaauthorization.dto.response
 
 data class UserResponseDto(
     val username: String,

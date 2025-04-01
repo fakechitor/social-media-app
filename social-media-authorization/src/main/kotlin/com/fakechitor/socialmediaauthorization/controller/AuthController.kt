@@ -1,7 +1,7 @@
 package com.fakechitor.socialmediaauthorization.controller
 
-import com.fakechitor.socialmediaauthorization.dto.UserLoginDto
-import com.fakechitor.socialmediaauthorization.dto.UserRegisterDto
+import com.fakechitor.socialmediaauthorization.dto.request.UserLoginDto
+import com.fakechitor.socialmediaauthorization.dto.request.UserRegisterDto
 import com.fakechitor.socialmediaauthorization.service.AuthService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping

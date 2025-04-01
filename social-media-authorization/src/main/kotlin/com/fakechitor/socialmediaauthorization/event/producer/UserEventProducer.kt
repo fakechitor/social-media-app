@@ -2,8 +2,8 @@ package com.fakechitor.socialmediaauthorization.event.producer
 
 import com.fakechitor.socialmediaauthorization.config.kafka.KafkaProducerConfig.Companion.USER_LOGIN_TOPIC
 import com.fakechitor.socialmediaauthorization.config.kafka.KafkaProducerConfig.Companion.USER_REGISTER_TOPIC
-import com.fakechitor.socialmediaauthorization.dto.UserLoginDto
-import com.fakechitor.socialmediaauthorization.dto.UserRegisterDto
+import com.fakechitor.socialmediaauthorization.dto.request.UserLoginDto
+import com.fakechitor.socialmediaauthorization.dto.request.UserRegisterDto
 import org.slf4j.LoggerFactory
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.stereotype.Component
