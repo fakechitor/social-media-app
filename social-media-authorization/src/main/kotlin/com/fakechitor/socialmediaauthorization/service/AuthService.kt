@@ -2,7 +2,7 @@ package com.fakechitor.socialmediaauthorization.service
 
 import com.fakechitor.socialmediaauthorization.dto.request.UserLoginDto
 import com.fakechitor.socialmediaauthorization.dto.request.UserRegisterDto
-import com.fakechitor.socialmediaauthorization.dto.response.UserResponseDto
+import com.fakechitor.socialmediaauthorization.dto.response.UserInternalDto
 import com.fakechitor.socialmediaauthorization.dto.response.AuthenticationResponse
 import com.fakechitor.socialmediaauthorization.property.JwtProperties
 import org.springframework.security.authentication.AuthenticationManager
@@ -42,7 +42,7 @@ class AuthService(
 
     private fun getAccessTokenExpiration(): Date = Date(System.currentTimeMillis() + jwtProperties.accessTokenExpiration)
 
-    fun register(userRegisterDto: UserRegisterDto): UserResponseDto? {
+    fun register(userRegisterDto: UserRegisterDto): UserInternalDto? {
         val encryptedPasswordDto =
             UserRegisterDto(userRegisterDto.email, userRegisterDto.login, passwordEncoder.encode(userRegisterDto.password))
         return userServiceClient.saveUser(encryptedPasswordDto)

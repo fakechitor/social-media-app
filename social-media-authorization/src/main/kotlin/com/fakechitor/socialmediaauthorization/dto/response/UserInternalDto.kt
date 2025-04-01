@@ -1,7 +1,8 @@
 package com.fakechitor.socialmediaauthorization.dto.response
 
-data class UserResponseDto(
+data class UserInternalDto(
+    val id: Long,
     val username: String,
     val email: String,
-    val password: String
+    val password: String,
 )

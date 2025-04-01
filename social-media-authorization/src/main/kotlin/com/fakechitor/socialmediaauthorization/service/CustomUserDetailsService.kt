@@ -1,6 +1,6 @@
 package com.fakechitor.socialmediaauthorization.service
 
-import com.fakechitor.socialmediaauthorization.dto.response.UserResponseDto
+import com.fakechitor.socialmediaauthorization.dto.response.UserInternalDto
 import org.springframework.security.core.userdetails.User
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
@@ -17,7 +17,7 @@ class CustomUserDetailsService(
             ?.mapToUserDetails()
             ?: throw UsernameNotFoundException("User not found")
 
-    private fun UserResponseDto.mapToUserDetails(): UserDetails =
+    private fun UserInternalDto.mapToUserDetails(): UserDetails =
         User(
             this.username,
             this.password,
