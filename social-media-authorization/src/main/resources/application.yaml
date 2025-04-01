@@ -10,4 +10,4 @@ jwt:
 server:
   port: 8082
 util:
-  users-address: ${USERS_ADDRESS:localhost:8080/api/users}
+  users-address: ${USERS_ADDRESS}
