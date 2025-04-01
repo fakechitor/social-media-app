@@ -5,8 +5,6 @@ import com.fakechitor.socialmediaauthorization.dto.UserRegisterDto
 import com.fakechitor.socialmediaauthorization.dto.UserResponseDto
 import com.fakechitor.socialmediaauthorization.dto.response.AuthenticationResponse
 import com.fakechitor.socialmediaauthorization.property.JwtProperties
-import org.springframework.beans.factory.annotation.Value
-import org.springframework.http.MediaType
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.userdetails.UserDetails
@@ -21,12 +19,9 @@ class AuthService(
     private val userDetailsService: CustomUserDetailsService,
     private val tokenService: TokenService,
     private val jwtProperties: JwtProperties,
-    private val webClient: WebClient,
     private val passwordEncoder: PasswordEncoder,
+    private val userServiceClient: UserServiceClient,
 ) {
-    @Value("\${util.users-address}")
-    private var userAddress: String? = null
-
     fun authentication(authenticationRequest: UserLoginDto): AuthenticationResponse {
         authManager.authenticate(
             UsernamePasswordAuthenticationToken(
@@ -51,13 +46,6 @@ class AuthService(
     fun register(userRegisterDto: UserRegisterDto): UserResponseDto? {
         val encryptedPasswordDto =
             UserRegisterDto(userRegisterDto.email, userRegisterDto.login, passwordEncoder.encode(userRegisterDto.password))
-        return webClient
-            .post()
-            .uri("$userAddress")
-            .contentType(MediaType.APPLICATION_JSON)
-            .bodyValue(encryptedPasswordDto)
-            .retrieve()
-            .bodyToMono(UserResponseDto::class.java)
-            .block()
+        return userServiceClient.saveUser(encryptedPasswordDto)
     }
 }

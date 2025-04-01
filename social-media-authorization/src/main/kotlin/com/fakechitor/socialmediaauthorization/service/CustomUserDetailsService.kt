@@ -7,24 +7,19 @@ import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Service
-import org.springframework.web.reactive.function.client.WebClient
 
 @Service
 class CustomUserDetailsService(
-    private val webClient: WebClient,
+    private val userServiceClient: UserServiceClient,
 ) : UserDetailsService {
     @Value("\${util.users-address}")
     private var userAddress: String? = null
 
-    override fun loadUserByUsername(username: String?): UserDetails {
-        val userRequest = webClient.get().uri("$userAddress/username/$username")
-        return userRequest
-            .retrieve()
-            .bodyToMono(UserResponseDto::class.java)
-            .block()
+    override fun loadUserByUsername(username: String?): UserDetails =
+        userServiceClient
+            .getUserByUsername(username)
             ?.mapToUserDetails()
             ?: throw UsernameNotFoundException("User not found")
-    }
 
     private fun UserResponseDto.mapToUserDetails(): UserDetails =
         User(
