@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: social-media-gateway
+  cloud:
+    gateway:
+      mvc:
+        routes:
+          - id: authorization-service
+            uri: ${AUTHORIZATION_SERVICE_URI}
+            predicates:
+              - Path=/api/auth/**
+          - id: user-service
+            uri: ${USER_SERVICE_URI}
+            predicates:
+              - Path=/api/users/**
