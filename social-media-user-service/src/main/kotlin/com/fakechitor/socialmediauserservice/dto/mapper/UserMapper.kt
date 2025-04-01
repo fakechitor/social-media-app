@@ -16,6 +16,6 @@ interface UserMapper {
     @Mapping(source = "login", target = "username")
     fun registerDtoToModel(userRegisterDto: UserRegisterDto): User
 
-    @Mapping(source = "username", target = "login")
+    @Mapping(target = "username", source = "username")
     fun modelToDto(user: User?): UserResponseDto
 }
