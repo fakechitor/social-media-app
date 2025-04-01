@@ -14,10 +14,16 @@ class UserServiceClient(
     @Value("\${util.users-address}")
     private var userAddress: String? = null
 
+    @Value("\${util.internal-secret-token}")
+    private var internalSecretToken: String? = null
+
+    private val internalSecretHeader = "X-Internal-Secret"
+
     fun getUserByUsername(username: String?): UserResponseDto? =
         webClient
             .get()
             .uri("$userAddress/username/$username")
+            .header(internalSecretHeader, internalSecretToken)
             .retrieve()
             .bodyToMono(UserResponseDto::class.java)
             .block()
@@ -26,6 +32,7 @@ class UserServiceClient(
         webClient
             .post()
             .uri("$userAddress")
+            .header(internalSecretHeader, internalSecretToken)
             .contentType(MediaType.APPLICATION_JSON)
             .bodyValue(userRegisterDto)
             .retrieve()

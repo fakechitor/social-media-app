@@ -11,3 +11,4 @@ server:
   port: 8082
 util:
   users-address: ${USERS_ADDRESS}
+  internal-secret-token: ${INTERNAL_SECRET_TOKEN}

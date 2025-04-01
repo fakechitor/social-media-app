@@ -13,3 +13,5 @@ spring:
       port: 35730
 server:
   port: 8081
+utils:
+  internal-secret-token: ${INTERNAL_SECRET_TOKEN}
