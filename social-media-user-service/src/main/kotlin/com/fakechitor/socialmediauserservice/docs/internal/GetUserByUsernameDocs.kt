@@ -11,7 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.RUNTIME)
 @Operation(
-    tags = ["Internal"],
+    tags = ["Internal User Interaction"],
     summary = "Authorize user",
     description = "Authorize user and retrieve user information internally. Requires \"X-Internal-Secret\" header with a secret code",
     responses = [
@@ -38,8 +38,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
             ],
         ),
         ApiResponse(
-            responseCode = "400",
-            description = "Bad request",
+            responseCode = "403",
+            description = "Content is unavailable due to missing or wrong \"X-Internal-Secret\" header",
             content = [
                 Content(
                     mediaType = "application/json",
@@ -48,7 +48,26 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
                         ExampleObject(
                             value = """
                             {
-                                "message": "Failed to login with username: venom"
+                                "message": "You do not have permission to access that endpoint"
+                            }
+                        """,
+                        ),
+                    ],
+                ),
+            ],
+        ),
+        ApiResponse(
+            responseCode = "404",
+            description = "Not found",
+            content = [
+                Content(
+                    mediaType = "application/json",
+                    schema = Schema(implementation = ErrorResponseDto::class),
+                    examples = [
+                        ExampleObject(
+                            value = """
+                            {
+                                "message": "User with login kondratyeva not found"
                             }
                         """,
                         ),

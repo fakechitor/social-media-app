@@ -11,7 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.RUNTIME)
 @Operation(
-    tags = ["Internal"],
+    tags = ["Internal User Interaction"],
     summary = "Save user internal",
     description = "Endpoint for user creating internally. Requires \"X-Internal-Secret\" header with a secret code",
     responses = [
@@ -32,6 +32,25 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
                             "password": "vladusprogramus"
                         }
                     """,
+                        ),
+                    ],
+                ),
+            ],
+        ),
+        ApiResponse(
+            responseCode = "403",
+            description = "Content is unavailable due to missing or wrong \"X-Internal-Secret\" header",
+            content = [
+                Content(
+                    mediaType = "application/json",
+                    schema = Schema(implementation = ErrorResponseDto::class),
+                    examples = [
+                        ExampleObject(
+                            value = """
+                            {
+                                "message": "You do not have permission to access that endpoint"
+                            }
+                        """,
                         ),
                     ],
                 ),
