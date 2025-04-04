@@ -29,6 +29,7 @@ dependencies {
     implementation("org.postgresql:postgresql:42.7.5")
     implementation("org.mapstruct:mapstruct:1.6.3")
     implementation("org.flywaydb:flyway-core:11.5.0")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.3")
     runtimeOnly("org.flywaydb:flyway-database-postgresql:11.5.0")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.18.3")
     kapt("org.mapstruct:mapstruct-processor:1.6.3")
