@@ -8,6 +8,7 @@ import com.fakechitor.socialmediaauthorization.property.JwtProperties
 import com.fakechitor.socialmediaauthorization.repository.RefreshTokenRepository
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.core.userdetails.User
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
@@ -31,9 +32,20 @@ class AuthService(
             ),
         )
         val user = userDetailsService.loadUserByUsername(userLoginDto.login)
+//        val accessToken = createAccessToken(user)
+//        val refreshToken = createRefreshToken(user)
+//        refreshTokenRepository.saveToken(refreshToken, user)
+//        return AuthenticationResponse(
+//            accessToken = accessToken,
+//            refreshToken = refreshToken,
+//        )
+        return generateAndSaveTokens(user)
+    }
+
+    private fun generateAndSaveTokens(user: UserDetails): AuthenticationResponse {
         val accessToken = createAccessToken(user)
         val refreshToken = createRefreshToken(user)
-        refreshTokenRepository.saveToken(refreshToken, user)
+        refreshTokenRepository.saveToken(refreshToken, user.username)
         return AuthenticationResponse(
             accessToken = accessToken,
             refreshToken = refreshToken,
@@ -44,8 +56,8 @@ class AuthService(
         val extractedEmail = tokenService.extractEmail(refreshToken)
         return extractedEmail?.let { email ->
             val currentUserDetails = userDetailsService.loadUserByUsername(email)
-            val refreshTokenUserDetails = refreshTokenRepository.getUserDetailsByToken(refreshToken)
-            if (!tokenService.isExpired(refreshToken) && refreshTokenUserDetails?.username == currentUserDetails.username) {
+            val refreshTokenUsername = refreshTokenRepository.getUserDetailsByToken(refreshToken)
+            if (!tokenService.isExpired(refreshToken) && refreshTokenUsername == currentUserDetails.username) {
                 createAccessToken(currentUserDetails)
             } else {
                 null
@@ -69,9 +81,18 @@ class AuthService(
 
     private fun getRefreshTokenExpiration(): Date = Date(System.currentTimeMillis() + jwtProperties.refreshTokenExpiration)
 
-    fun register(userRegisterDto: UserRegisterDto): UserInternalDto? {
+    fun register(userRegisterDto: UserRegisterDto): AuthenticationResponse {
         val encryptedPasswordDto =
             UserRegisterDto(userRegisterDto.email, userRegisterDto.login, passwordEncoder.encode(userRegisterDto.password))
-        return userServiceClient.saveUser(encryptedPasswordDto)
+        val user =
+            userServiceClient.saveUser(encryptedPasswordDto).mapToUserDetails()
+        return generateAndSaveTokens(user = user)
     }
+
+    private fun UserInternalDto.mapToUserDetails(): UserDetails =
+        User(
+            this.username,
+            this.password,
+            listOf(),
+        )
 }
