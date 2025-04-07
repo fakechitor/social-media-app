@@ -1,6 +1,6 @@
 package com.fakechitor.socialmediauserservice.docs.internal
 
-import com.fakechitor.socialmediauserservice.dto.response.ErrorResponseDto
+import com.fakechitor.socialmediauserservice.dto.response.ExceptionMessageDto
 import com.fakechitor.socialmediauserservice.dto.response.UserResponseDto
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Content
@@ -43,7 +43,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
             content = [
                 Content(
                     mediaType = "application/json",
-                    schema = Schema(implementation = ErrorResponseDto::class),
+                    schema = Schema(implementation = ExceptionMessageDto::class),
                     examples = [
                         ExampleObject(
                             value = """
@@ -57,17 +57,17 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
             ],
         ),
         ApiResponse(
-            responseCode = "404",
-            description = "User with that username was not found",
+            responseCode = "409",
+            description = "User with that login already exists",
             content = [
                 Content(
                     mediaType = "application/json",
-                    schema = Schema(implementation = ErrorResponseDto::class),
+                    schema = Schema(implementation = ExceptionMessageDto::class),
                     examples = [
                         ExampleObject(
                             value = """
                             {
-                                "message": "Failed to login with username: venom"
+                                "message": "User with that name already exists"
                             }
                         """,
                         ),
@@ -81,7 +81,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
             content = [
                 Content(
                     mediaType = "application/json",
-                    schema = Schema(implementation = ErrorResponseDto::class),
+                    schema = Schema(implementation = ExceptionMessageDto::class),
                     examples = [
                         ExampleObject(
                             value = """

@@ -1,7 +1,7 @@
-package com.fakechitor.socialmediauserservice.docs.internal
+package com.fakechitor.socialmediauserservice.docs.open
 
 import com.fakechitor.socialmediauserservice.dto.response.ExceptionMessageDto
-import com.fakechitor.socialmediauserservice.dto.response.UserResponseDto
+import com.fakechitor.socialmediauserservice.dto.response.SubscribeResponseDocs
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.ExampleObject
@@ -11,25 +11,22 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.RUNTIME)
 @Operation(
-    tags = ["Internal User Interaction"],
-    summary = "Authorize user",
-    description = "Authorize user and retrieve user information internally. Requires \"X-Internal-Secret\" header with a secret code",
+    tags = ["User Interaction"],
+    summary = "Subscribe on user",
+    description = "Endpoint for adding subscription on user",
     responses = [
         ApiResponse(
-            responseCode = "200",
-            description = "User information retrieved successfully",
+            responseCode = "201",
+            description = "Subscription was successful",
             content = [
                 Content(
                     mediaType = "application/json",
-                    schema = Schema(implementation = UserResponseDto::class),
+                    schema = Schema(implementation = SubscribeResponseDocs::class),
                     examples = [
                         ExampleObject(
                             value = """
                         {
-                            "id" : "1",
-                            "username": "timagucci",
-                            "email": "guccigangtima@gmail.com",
-                            "password": "iamrichtima"
+                            "subscribedUserLogin" : "Mark Zhukov"
                         }
                     """,
                         ),
@@ -38,8 +35,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
             ],
         ),
         ApiResponse(
-            responseCode = "403",
-            description = "Content is unavailable due to missing or wrong \"X-Internal-Secret\" header",
+            responseCode = "404",
+            description = "User with that username not found and can not be subscribed",
             content = [
                 Content(
                     mediaType = "application/json",
@@ -48,7 +45,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
                         ExampleObject(
                             value = """
                             {
-                                "message": "You do not have permission to access that endpoint"
+                                "message": "User with login BorjomiGeorgia does not exist",
                             }
                         """,
                         ),
@@ -57,8 +54,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
             ],
         ),
         ApiResponse(
-            responseCode = "404",
-            description = "Not found",
+            responseCode = "409",
+            description = "You are already subscribed to this user",
             content = [
                 Content(
                     mediaType = "application/json",
@@ -67,7 +64,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
                         ExampleObject(
                             value = """
                             {
-                                "message": "User with login kondratyeva not found"
+                                "message": "You already subscribed to this user",
                             }
                         """,
                         ),
@@ -96,4 +93,4 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
         ),
     ],
 )
-annotation class GetUserByUsernameDocs
+annotation class SubscribeDocs
