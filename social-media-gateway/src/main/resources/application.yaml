@@ -1,15 +1,16 @@
 spring:
   application:
     name: social-media-gateway
+  main:
+    web-application-type: reactive
   cloud:
     gateway:
-      mvc:
-        routes:
-          - id: authorization-service
-            uri: ${AUTHORIZATION_SERVICE_URI}
-            predicates:
-              - Path=/api/auth/**
-          - id: user-service
-            uri: ${USER_SERVICE_URI}
-            predicates:
-              - Path=/api/users/**
+      routes:
+        - id: authorization-service
+          uri: ${AUTHORIZATION_SERVICE_URI}
+          predicates:
+            - Path=/api/auth/**
+        - id: user-service
+          uri: ${USER_SERVICE_URI}
+          predicates:
+            - Path=/api/users/**
