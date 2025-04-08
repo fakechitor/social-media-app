@@ -1,16 +1,12 @@
 package com.fakechitor.socialmediaauthorization.service
 
 import com.fakechitor.socialmediaauthorization.dto.request.UserLoginDto
-import com.fakechitor.socialmediaauthorization.dto.request.UserRegisterDto
 import com.fakechitor.socialmediaauthorization.dto.response.AuthenticationResponse
-import com.fakechitor.socialmediaauthorization.dto.response.UserInternalDto
 import com.fakechitor.socialmediaauthorization.property.JwtProperties
 import com.fakechitor.socialmediaauthorization.repository.RefreshTokenRepository
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
-import org.springframework.security.core.userdetails.User
 import org.springframework.security.core.userdetails.UserDetails
-import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import java.util.*
 
@@ -20,8 +16,6 @@ class AuthService(
     private val userDetailsService: CustomUserDetailsService,
     private val tokenService: TokenService,
     private val jwtProperties: JwtProperties,
-    private val passwordEncoder: PasswordEncoder,
-    private val userServiceClient: UserServiceClient,
     private val refreshTokenRepository: RefreshTokenRepository,
 ) {
     fun authentication(userLoginDto: UserLoginDto): AuthenticationResponse {
@@ -31,18 +25,10 @@ class AuthService(
                 userLoginDto.password,
             ),
         )
-        val user = userDetailsService.loadUserByUsername(userLoginDto.login)
-//        val accessToken = createAccessToken(user)
-//        val refreshToken = createRefreshToken(user)
-//        refreshTokenRepository.saveToken(refreshToken, user)
-//        return AuthenticationResponse(
-//            accessToken = accessToken,
-//            refreshToken = refreshToken,
-//        )
-        return generateAndSaveTokens(user)
+        return generateAndSaveTokens(user = userDetailsService.loadUserByUsername(userLoginDto.login))
     }
 
-    private fun generateAndSaveTokens(user: UserDetails): AuthenticationResponse {
+    fun generateAndSaveTokens(user: UserDetails): AuthenticationResponse {
         val accessToken = createAccessToken(user)
         val refreshToken = createRefreshToken(user)
         refreshTokenRepository.saveToken(refreshToken, user.username)
@@ -80,19 +66,4 @@ class AuthService(
     private fun getAccessTokenExpiration(): Date = Date(System.currentTimeMillis() + jwtProperties.accessTokenExpiration)
 
     private fun getRefreshTokenExpiration(): Date = Date(System.currentTimeMillis() + jwtProperties.refreshTokenExpiration)
-
-    fun register(userRegisterDto: UserRegisterDto): AuthenticationResponse {
-        val encryptedPasswordDto =
-            UserRegisterDto(userRegisterDto.email, userRegisterDto.login, passwordEncoder.encode(userRegisterDto.password))
-        val user =
-            userServiceClient.saveUser(encryptedPasswordDto).mapToUserDetails()
-        return generateAndSaveTokens(user = user)
-    }
-
-    private fun UserInternalDto.mapToUserDetails(): UserDetails =
-        User(
-            this.username,
-            this.password,
-            listOf(),
-        )
 }
