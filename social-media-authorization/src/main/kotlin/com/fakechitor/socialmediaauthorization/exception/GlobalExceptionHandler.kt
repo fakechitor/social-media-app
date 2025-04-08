@@ -1,6 +1,7 @@
 package com.fakechitor.socialmediaauthorization.exception
 
 import com.fakechitor.socialmediaauthorization.dto.response.ExceptionMessageDto
+import io.jsonwebtoken.JwtException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
@@ -15,4 +16,8 @@ class GlobalExceptionHandler {
     @ExceptionHandler(UserAlreadyExistsException::class)
     fun handleUserAlreadyExistsException(e: UserAlreadyExistsException): ResponseEntity<ExceptionMessageDto> =
         ResponseEntity.status(HttpStatus.CONFLICT).body(ExceptionMessageDto(e.message))
+
+    @ExceptionHandler(JwtException::class)
+    fun handleJwtException(e: JwtException): ResponseEntity<ExceptionMessageDto> =
+        ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ExceptionMessageDto(e.message))
 }

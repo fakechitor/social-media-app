@@ -2,8 +2,10 @@ package com.fakechitor.socialmediaauthorization.service
 
 import com.fakechitor.socialmediaauthorization.property.JwtProperties
 import io.jsonwebtoken.Claims
+import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
+import org.slf4j.LoggerFactory
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Service
 import java.util.*
@@ -12,10 +14,25 @@ import java.util.*
 class TokenService(
     private val jwtProperties: JwtProperties,
 ) {
+    private val logger = LoggerFactory.getLogger(this::class.java)
+
     private val secretKey =
         Keys.hmacShaKeyFor(
             jwtProperties.key.toByteArray(),
         )
+
+    fun validateJwtToken(authToken: String?) {
+        runCatching {
+            Jwts
+                .parser()
+                .verifyWith(secretKey)
+                .build()
+                .parse(authToken)
+        }.onFailure {
+            logger.info("Error with validating jwt token: $authToken")
+            throw JwtException("Jwt token validation error")
+        }
+    }
 
     fun generate(
         userDetails: UserDetails,
