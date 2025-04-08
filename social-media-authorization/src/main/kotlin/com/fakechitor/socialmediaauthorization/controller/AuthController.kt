@@ -1,5 +1,7 @@
 package com.fakechitor.socialmediaauthorization.controller
 
+import com.fakechitor.socialmediaauthorization.docs.auth.AuthenticateUser
+import com.fakechitor.socialmediaauthorization.docs.auth.RegisterUser
 import com.fakechitor.socialmediaauthorization.dto.request.UserLoginDto
 import com.fakechitor.socialmediaauthorization.dto.request.UserRegisterDto
 import com.fakechitor.socialmediaauthorization.service.AuthService
@@ -15,11 +17,13 @@ class AuthController(
     private val authService: AuthService,
 ) {
     @PostMapping("/login")
+    @RegisterUser
     fun authorize(
         @RequestBody userLoginDto: UserLoginDto,
     ) = ResponseEntity.ok(authService.authentication(userLoginDto))
 
     @PostMapping("/register")
+    @AuthenticateUser
     fun register(
         @RequestBody userRegisterDto: UserRegisterDto,
     ) = ResponseEntity.ok(authService.register(userRegisterDto))
