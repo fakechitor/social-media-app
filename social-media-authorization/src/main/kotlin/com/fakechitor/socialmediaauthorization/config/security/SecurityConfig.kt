@@ -32,6 +32,7 @@ class SecurityConfig(
             securityMatcher("/api/**")
             authorizeHttpRequests {
                 authorize(HttpMethod.POST, "/api/auth/**", permitAll)
+                authorize(HttpMethod.GET, "/api/auth/**", permitAll)
                 authorize(anyRequest, authenticated)
             }
             sessionManagement {
