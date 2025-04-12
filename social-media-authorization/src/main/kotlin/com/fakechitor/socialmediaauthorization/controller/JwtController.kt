@@ -27,7 +27,7 @@ class JwtController(
         authService
             .refreshAccessToken(request.token)
             ?.mapToTokenResponse()
-            ?: throw ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid refresh token.")
+            ?: throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid refresh token.")
 
     private fun String.mapToTokenResponse(): TokenResponse =
         TokenResponse(
