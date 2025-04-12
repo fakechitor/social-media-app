@@ -14,3 +14,7 @@ spring:
           uri: ${USER_SERVICE_URI}
           predicates:
             - Path=/api/users/**
+          filters:
+            - name: JwtAuthentication
+util:
+  auth-address: ${AUTHORIZATION_SERVICE_URI}

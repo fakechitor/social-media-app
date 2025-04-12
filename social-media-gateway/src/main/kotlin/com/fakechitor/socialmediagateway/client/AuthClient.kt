@@ -1,22 +1,27 @@
 package com.fakechitor.socialmediagateway.client
 
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
-import org.springframework.web.client.RestTemplate
-import org.springframework.web.util.UriComponentsBuilder
+import org.springframework.web.reactive.function.client.WebClient
 
 @Component
 class AuthClient(
-    private val restTemplate: RestTemplate,
+    private val webClient: WebClient,
 ) {
+    @Value("\${util.auth-address}")
+    private var authAddress: String? = null
+
     fun validateToken(token: String): Boolean {
-        val baseUri = "http:localhost:8082/api/auth/validate"
-        val url =
-            UriComponentsBuilder
-                .fromUriString(baseUri)
-                .queryParam("token", token)
-                .toUriString()
-        val response =
-            restTemplate.getForObject(url, String::class.java)
-        return true
+        runCatching {
+            webClient
+                .get()
+                .uri("$authAddress/api/auth/validate?token=$token")
+                .retrieve()
+                .toBodilessEntity()
+                .block()
+        }.fold(
+            onSuccess = { return true },
+            onFailure = { return false },
+        )
     }
 }
