@@ -21,17 +21,20 @@ class TokenService(
             jwtProperties.key.toByteArray(),
         )
 
-    fun validateJwtToken(authToken: String?) {
+    fun validateJwtToken(authToken: String) {
         runCatching {
             Jwts
                 .parser()
                 .verifyWith(secretKey)
                 .build()
                 .parse(authToken)
-        }.onFailure {
-            logger.info("Error with validating jwt token: $authToken")
-            throw JwtException("Jwt token validation error")
-        }
+        }.fold(
+            onSuccess = {},
+            onFailure = {
+                logger.info("Error with validating jwt token: $authToken")
+                throw JwtException("Token is invalid")
+            },
+        )
     }
 
     fun generate(
