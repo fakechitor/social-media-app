@@ -13,21 +13,6 @@ services:
       - pg_data:/var/lib/postgresql/data
     networks:
       - social-media-app-network
-  mysql:
-    container_name: post_service_db
-    image: mysql:latest
-    restart: always
-    environment:
-      - MYSQL_USER=mysql
-      - MYSQL_PASSWORD=password
-      - MYSQL_ROOT_PASSWORD=password
-      - MYSQL_DATABASE=social-media-post-service
-    ports:
-      - "3306:3306"
-    volumes:
-      - mysql_data:/data
-    networks:
-      - social-media-app-network
   kafka:
     image: apache/kafka:latest
     ports:
@@ -47,7 +32,6 @@ services:
 
 volumes:
   pg_data:
-  mysql_data:
   kafka_data:
   redis_data:
 
