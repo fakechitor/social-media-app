@@ -1,5 +1,7 @@
 package com.fakechitor.socialmediaauthorization.controller
 
+import com.fakechitor.socialmediaauthorization.docs.jwt.RefreshTokenDocs
+import com.fakechitor.socialmediaauthorization.docs.jwt.ValidateTokenDocs
 import com.fakechitor.socialmediaauthorization.dto.request.RefreshTokenRequest
 import com.fakechitor.socialmediaauthorization.dto.response.TokenResponse
 import com.fakechitor.socialmediaauthorization.service.AuthService
@@ -16,11 +18,13 @@ class JwtController(
     private val tokenService: TokenService,
 ) {
     @GetMapping("/validate")
+    @ValidateTokenDocs
     fun validateToken(
         @RequestParam("token") token: String,
     ) = ResponseEntity.ok(tokenService.validateJwtToken(token))
 
     @PostMapping("/refresh")
+    @RefreshTokenDocs
     fun refreshAccessToken(
         @RequestBody request: RefreshTokenRequest,
     ): TokenResponse =
