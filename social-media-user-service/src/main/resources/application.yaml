@@ -6,6 +6,10 @@ spring:
     url: ${POSTGRES_URL}
     username: ${POSTGRES_USER}
     password: ${POSTGRES_PASSWORD}
+  flyway:
+    default-schema: user
+    schemas: user
+    table: flyway_schema_history_user
   kafka:
     bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
   devtools:
