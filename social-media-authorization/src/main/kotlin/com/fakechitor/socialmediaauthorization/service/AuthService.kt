@@ -1,12 +1,13 @@
 package com.fakechitor.socialmediaauthorization.service
 
+import com.fakechitor.socialmediaauthorization.config.security.CustomUserDetails
 import com.fakechitor.socialmediaauthorization.dto.request.UserLoginDto
 import com.fakechitor.socialmediaauthorization.dto.response.AuthenticationResponse
 import com.fakechitor.socialmediaauthorization.property.JwtProperties
 import com.fakechitor.socialmediaauthorization.repository.RefreshTokenRepository
+import org.slf4j.LoggerFactory
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
-import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Service
 import java.util.*
 
@@ -18,6 +19,8 @@ class AuthService(
     private val jwtProperties: JwtProperties,
     private val refreshTokenRepository: RefreshTokenRepository,
 ) {
+    private val logger = LoggerFactory.getLogger(this::class.java)
+
     fun authentication(userLoginDto: UserLoginDto): AuthenticationResponse {
         authManager.authenticate(
             UsernamePasswordAuthenticationToken(
@@ -28,10 +31,14 @@ class AuthService(
         return generateAndSaveTokens(user = userDetailsService.loadUserByUsername(userLoginDto.login))
     }
 
-    fun generateAndSaveTokens(user: UserDetails): AuthenticationResponse {
+    fun generateAndSaveTokens(user: CustomUserDetails): AuthenticationResponse {
         val accessToken = createAccessToken(user)
         val refreshToken = createRefreshToken(user)
-        refreshTokenRepository.saveToken(refreshToken, user.username)
+        if (user.username != null) {
+            refreshTokenRepository.saveToken(refreshToken, user.username!!)
+            logger.info("Refresh token saved for ${user.username}")
+        }
+
         return AuthenticationResponse(
             accessToken = accessToken,
             refreshToken = refreshToken,
@@ -51,13 +58,13 @@ class AuthService(
         }
     }
 
-    private fun createAccessToken(user: UserDetails) =
+    private fun createAccessToken(user: CustomUserDetails) =
         tokenService.generate(
             userDetails = user,
             expirationDate = getAccessTokenExpiration(),
         )
 
-    private fun createRefreshToken(user: UserDetails) =
+    private fun createRefreshToken(user: CustomUserDetails) =
         tokenService.generate(
             userDetails = user,
             expirationDate = getRefreshTokenExpiration(),

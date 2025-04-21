@@ -1,5 +1,6 @@
 package com.fakechitor.socialmediaauthorization.service
 
+import com.fakechitor.socialmediaauthorization.config.security.CustomUserDetails
 import com.fakechitor.socialmediaauthorization.property.JwtProperties
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.JwtException
@@ -38,7 +39,7 @@ class TokenService(
     }
 
     fun generate(
-        userDetails: UserDetails,
+        userDetails: CustomUserDetails,
         expirationDate: Date,
         additionalClaims: Map<String, Any> = emptyMap(),
     ): String =
@@ -48,6 +49,7 @@ class TokenService(
             .subject(userDetails.username)
             .issuedAt(Date(System.currentTimeMillis()))
             .expiration(expirationDate)
+            .add("userId", userDetails.getUserId())
             .add(additionalClaims)
             .and()
             .signWith(secretKey)
