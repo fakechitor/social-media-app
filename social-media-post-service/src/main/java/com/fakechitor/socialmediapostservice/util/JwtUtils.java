@@ -1,4 +1,4 @@
-package com.fakechitor.socialmediapostservice.utils;
+package com.fakechitor.socialmediapostservice.util;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
