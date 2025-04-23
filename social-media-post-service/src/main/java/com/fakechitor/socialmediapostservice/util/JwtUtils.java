@@ -23,15 +23,16 @@ public class JwtUtils {
         return extractAllClaimsFromJwt(token).getSubject();
     }
 
-    public Integer getUserIdFromJwt(String token) {
-        return extractAllClaimsFromJwt(token).get("userId", Integer.class);
+    public Long getUserIdFromJwt(String token) {
+        return extractAllClaimsFromJwt(token).get("userId", Long.class);
     }
 
     private Claims extractAllClaimsFromJwt(String token) {
+        var jwt = token.substring(7);
         return Jwts.parser()
                 .verifyWith(parseStringToSecretToken(secretToken))
                 .build()
-                .parseSignedClaims(token)
+                .parseSignedClaims(jwt)
                 .getPayload();
     }
 
