@@ -16,5 +16,11 @@ spring:
             - Path=/api/users/**
           filters:
             - name: JwtAuthentication
+        - id: post-service
+          uri: ${POST_SERVICE_URI}
+          predicates:
+            - Path=/api/posts/**
+          filters:
+            - name: JwtAuthentication
 util:
   auth-address: ${AUTHORIZATION_SERVICE_URI}
