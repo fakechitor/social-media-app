@@ -4,6 +4,7 @@ import com.fakechitor.socialmediapostservice.dto.request.PostRequestDto;
 import com.fakechitor.socialmediapostservice.dto.response.PostResponseDto;
 import com.fakechitor.socialmediapostservice.service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,5 +40,12 @@ public class PostController {
                                                @RequestHeader("Authorization") String jwt) {
         var updatedPost = postService.update(postRequestDto, images, id, jwt);
         return ResponseEntity.ok(updatedPost);
+    }
+
+    @DeleteMapping("/{id}")
+    ResponseEntity<PostResponseDto> deletePost(@PathVariable("id") Long id,
+                                               @RequestHeader("Authorization") String jwt) {
+        postService.delete(id, jwt);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

@@ -43,11 +43,7 @@ public class PostService {
     @Transactional
     public PostResponseDto update(PostRequestDto dto, List<MultipartFile> files, Long id, String jwt) {
         var post = postRepository.findById(id).orElseThrow(() -> new PostNotFoundException("Post with that id doesn't exist"));
-
-        var jwtId = jwtUtils.getUserIdFromJwt(jwt);
-        if (!jwtId.equals(post.getUserId())) {
-            throw new ForbiddenAccessException("You can`t update not yours post");
-        }
+        throwIfUserIdsAreDifferent(post.getUserId(), jwt);
 
         if (dto != null) {
             post.setTitle(dto.title());
@@ -58,5 +54,21 @@ public class PostService {
         }
 
         return postMapper.toResponseDto(post);
+    }
+
+    @Transactional
+    public void delete(Long id, String jwt) {
+        var post = postRepository.findById(id).orElseThrow(() -> new PostNotFoundException("Post with that id doesn't exist"));
+        throwIfUserIdsAreDifferent(post.getUserId(), jwt);
+        postRepository.delete(post);
+
+    }
+
+    private void throwIfUserIdsAreDifferent(Long userId, String jwt) {
+        var jwtId = jwtUtils.getUserIdFromJwt(jwt);
+
+        if (!jwtId.equals(userId)) {
+            throw new ForbiddenAccessException("You don`t have access to edit this post");
+        }
     }
 }
