@@ -25,4 +25,10 @@ public class PostController {
     ) {
         return ResponseEntity.ok(postService.save(postRequestDto, images, jwt));
     }
+
+    @GetMapping("/{id}")
+    ResponseEntity<PostResponseDto> getPostById(@PathVariable("id") Long id) {
+        var post = postService.findById(id);
+        return ResponseEntity.ok(post);
+    }
 }

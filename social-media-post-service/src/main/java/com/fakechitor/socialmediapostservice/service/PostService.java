@@ -3,6 +3,7 @@ package com.fakechitor.socialmediapostservice.service;
 import com.fakechitor.socialmediapostservice.dto.mapper.PostMapper;
 import com.fakechitor.socialmediapostservice.dto.request.PostRequestDto;
 import com.fakechitor.socialmediapostservice.dto.response.PostResponseDto;
+import com.fakechitor.socialmediapostservice.exception.PostNotFoundException;
 import com.fakechitor.socialmediapostservice.repository.PostRepository;
 import com.fakechitor.socialmediapostservice.util.JwtUtils;
 import jakarta.persistence.EntityManager;
@@ -32,4 +33,8 @@ public class PostService {
         return postMapper.toResponseDto(post);
     }
 
+    public PostResponseDto findById(Long id) {
+        var post = postRepository.findById(id).orElseThrow(() -> new PostNotFoundException("Post with that id doesn't exist"));
+        return postMapper.toResponseDto(post);
+    }
 }

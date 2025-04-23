@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -13,5 +14,15 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(JwtException.class)
     ResponseEntity<ExceptionMessageDto> handleJwtException(JwtException e ){
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ExceptionMessageDto(e.getMessage()));
+    }
+
+    @ExceptionHandler(PostNotFoundException.class)
+    ResponseEntity<ExceptionMessageDto> handlePostNotFoundException(PostNotFoundException e ){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ExceptionMessageDto(e.getMessage()));
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    ResponseEntity<ExceptionMessageDto> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionMessageDto(e.getMessage()));
     }
 }
