@@ -3,6 +3,7 @@ package com.fakechitor.socialmediapostservice.service;
 import com.fakechitor.socialmediapostservice.dto.mapper.PostMapper;
 import com.fakechitor.socialmediapostservice.dto.request.PostRequestDto;
 import com.fakechitor.socialmediapostservice.dto.response.PostResponseDto;
+import com.fakechitor.socialmediapostservice.exception.ForbiddenAccessException;
 import com.fakechitor.socialmediapostservice.exception.PostNotFoundException;
 import com.fakechitor.socialmediapostservice.repository.PostRepository;
 import com.fakechitor.socialmediapostservice.util.JwtUtils;
@@ -28,6 +29,7 @@ public class PostService {
         var post = postMapper.toEntity(postRequestDto);
         post.setUserId(jwtUtils.getUserIdFromJwt(jwt));
         post.setImages(postImageService.getPostImages(files, post));
+
         postRepository.save(post);
         entityManager.refresh(post);
         return postMapper.toResponseDto(post);
@@ -35,6 +37,26 @@ public class PostService {
 
     public PostResponseDto findById(Long id) {
         var post = postRepository.findById(id).orElseThrow(() -> new PostNotFoundException("Post with that id doesn't exist"));
+        return postMapper.toResponseDto(post);
+    }
+
+    @Transactional
+    public PostResponseDto update(PostRequestDto dto, List<MultipartFile> files, Long id, String jwt) {
+        var post = postRepository.findById(id).orElseThrow(() -> new PostNotFoundException("Post with that id doesn't exist"));
+
+        var jwtId = jwtUtils.getUserIdFromJwt(jwt);
+        if (!jwtId.equals(post.getUserId())) {
+            throw new ForbiddenAccessException("You can`t update not yours post");
+        }
+
+        if (dto != null) {
+            post.setTitle(dto.title());
+            post.setText(dto.text());
+        }
+        if (files != null) {
+            post.setImages(postImageService.getPostImages(files, post));
+        }
+
         return postMapper.toResponseDto(post);
     }
 }

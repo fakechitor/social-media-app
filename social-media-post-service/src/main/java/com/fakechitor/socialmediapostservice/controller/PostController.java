@@ -31,4 +31,13 @@ public class PostController {
         var post = postService.findById(id);
         return ResponseEntity.ok(post);
     }
+
+    @PatchMapping("/{id}")
+    ResponseEntity<PostResponseDto> updatePost(@PathVariable("id") Long id,
+                                               @RequestPart(name = "postData", required = false) PostRequestDto postRequestDto,
+                                               @RequestPart(name = "images", required = false) List<MultipartFile> images,
+                                               @RequestHeader("Authorization") String jwt) {
+        var updatedPost = postService.update(postRequestDto, images, id, jwt);
+        return ResponseEntity.ok(updatedPost);
+    }
 }

@@ -25,4 +25,9 @@ public class GlobalExceptionHandler {
     ResponseEntity<ExceptionMessageDto> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e){
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionMessageDto(e.getMessage()));
     }
+
+    @ExceptionHandler(ForbiddenAccessException.class)
+    ResponseEntity<ExceptionMessageDto> handleForbiddenAccessException(ForbiddenAccessException e){
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ExceptionMessageDto(e.getMessage()));
+    }
 }
