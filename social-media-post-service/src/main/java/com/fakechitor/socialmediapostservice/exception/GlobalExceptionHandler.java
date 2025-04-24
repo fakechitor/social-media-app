@@ -2,6 +2,7 @@ package com.fakechitor.socialmediapostservice.exception;
 
 import com.fakechitor.socialmediapostservice.dto.response.ExceptionMessageDto;
 import io.jsonwebtoken.JwtException;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -43,5 +44,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     ResponseEntity<ExceptionMessageDto> handleMethodArgumentNotValidException(MethodArgumentNotValidException e){
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionMessageDto(Objects.requireNonNull(e.getFieldError()).getDefaultMessage()));
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    ResponseEntity<ExceptionMessageDto> handleConstraintViolationException(ConstraintViolationException e){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionMessageDto(e.getMessage()));
     }
 }
