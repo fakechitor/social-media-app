@@ -28,7 +28,10 @@ public class PostService {
     public PostResponseDto save(PostRequestDto postRequestDto, List<MultipartFile> files, String jwt) {
         var post = postMapper.toEntity(postRequestDto);
         post.setUserId(jwtUtils.getUserIdFromJwt(jwt));
-        post.setImages(postImageService.getPostImages(files, post));
+
+        if (files != null && !files.isEmpty()) {
+            post.setImages(postImageService.getPostImages(files, post));
+        }
 
         postRepository.save(post);
         entityManager.refresh(post);

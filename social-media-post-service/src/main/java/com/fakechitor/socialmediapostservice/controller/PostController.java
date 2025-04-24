@@ -21,7 +21,7 @@ public class PostController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     ResponseEntity<PostResponseDto> createPost(
             @RequestPart("postData") PostRequestDto postRequestDto,
-            @RequestPart("images") List<MultipartFile> images,
+            @RequestPart(value = "images", required = false) List<MultipartFile> images,
             @RequestHeader("Authorization") String jwt
     ) {
         return ResponseEntity.status(HttpStatus.CREATED).body(postService.save(postRequestDto, images, jwt));
