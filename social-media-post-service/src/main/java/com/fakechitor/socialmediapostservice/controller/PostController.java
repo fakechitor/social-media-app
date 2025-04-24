@@ -24,7 +24,7 @@ public class PostController {
             @RequestPart("images") List<MultipartFile> images,
             @RequestHeader("Authorization") String jwt
     ) {
-        return ResponseEntity.ok(postService.save(postRequestDto, images, jwt));
+        return ResponseEntity.status(HttpStatus.CREATED).body(postService.save(postRequestDto, images, jwt));
     }
 
     @GetMapping("/{id}")
