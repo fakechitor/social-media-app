@@ -3,6 +3,7 @@ package com.fakechitor.socialmediapostservice.controller;
 import com.fakechitor.socialmediapostservice.dto.request.PostRequestDto;
 import com.fakechitor.socialmediapostservice.dto.response.PostResponseDto;
 import com.fakechitor.socialmediapostservice.service.PostService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,7 +21,7 @@ public class PostController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     ResponseEntity<PostResponseDto> createPost(
-            @RequestPart("postData") PostRequestDto postRequestDto,
+            @Valid @RequestPart("postData") PostRequestDto postRequestDto,
             @RequestPart(value = "images", required = false) List<MultipartFile> images,
             @RequestHeader("Authorization") String jwt
     ) {
@@ -35,7 +36,7 @@ public class PostController {
 
     @PatchMapping("/{id}")
     ResponseEntity<PostResponseDto> updatePost(@PathVariable("id") Long id,
-                                               @RequestPart(name = "postData", required = false) PostRequestDto postRequestDto,
+                                               @Valid @RequestPart(name = "postData", required = false) PostRequestDto postRequestDto,
                                                @RequestPart(name = "images", required = false) List<MultipartFile> images,
                                                @RequestHeader("Authorization") String jwt) {
         var updatedPost = postService.update(postRequestDto, images, id, jwt);

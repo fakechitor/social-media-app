@@ -4,10 +4,13 @@ import com.fakechitor.socialmediapostservice.dto.response.ExceptionMessageDto;
 import io.jsonwebtoken.JwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+
+import java.util.Objects;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -35,5 +38,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpServerErrorException.class)
     ResponseEntity<ExceptionMessageDto> handleHttpServerErrorException(HttpServerErrorException e){
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ExceptionMessageDto("Something went wrong =("));
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    ResponseEntity<ExceptionMessageDto> handleMethodArgumentNotValidException(MethodArgumentNotValidException e){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionMessageDto(Objects.requireNonNull(e.getFieldError()).getDefaultMessage()));
     }
 }
