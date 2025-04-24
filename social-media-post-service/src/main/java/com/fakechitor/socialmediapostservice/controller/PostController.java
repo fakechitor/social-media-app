@@ -1,5 +1,9 @@
 package com.fakechitor.socialmediapostservice.controller;
 
+import com.fakechitor.socialmediapostservice.docs.CreatePostDocs;
+import com.fakechitor.socialmediapostservice.docs.DeletePostDocs;
+import com.fakechitor.socialmediapostservice.docs.GetPostByIdDocs;
+import com.fakechitor.socialmediapostservice.docs.UpdatePostDocs;
 import com.fakechitor.socialmediapostservice.dto.request.PostRequestDto;
 import com.fakechitor.socialmediapostservice.dto.response.PostResponseDto;
 import com.fakechitor.socialmediapostservice.service.PostService;
@@ -23,6 +27,7 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @CreatePostDocs
     ResponseEntity<PostResponseDto> createPost(
             @Valid @RequestPart("postData") PostRequestDto postRequestDto,
             @RequestPart(value = "images", required = false) List<MultipartFile> images,
@@ -32,12 +37,14 @@ public class PostController {
     }
 
     @GetMapping("/{id}")
+    @GetPostByIdDocs
     ResponseEntity<PostResponseDto> getPostById(@Min(value = 0, message = "Post id can`t be negative") @PathVariable("id") Long id) {
         var post = postService.findById(id);
         return ResponseEntity.ok(post);
     }
 
     @PatchMapping("/{id}")
+    @UpdatePostDocs
     ResponseEntity<PostResponseDto> updatePost(@Min(value = 0, message = "Post id can`t be negative") @PathVariable("id") Long id,
                                                @Valid @RequestPart(name = "postData", required = false) PostRequestDto postRequestDto,
                                                @RequestPart(name = "images", required = false) List<MultipartFile> images,
@@ -47,6 +54,7 @@ public class PostController {
     }
 
     @DeleteMapping("/{id}")
+    @DeletePostDocs
     ResponseEntity<PostResponseDto> deletePost(@Min(value = 0, message = "Post id can`t be negative") @PathVariable("id") Long id,
                                                @RequestHeader("Authorization") String jwt) {
         postService.delete(id, jwt);

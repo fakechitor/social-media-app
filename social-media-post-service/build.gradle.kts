@@ -37,6 +37,7 @@ dependencies {
     implementation("io.jsonwebtoken:jjwt-api:0.12.3")
     implementation("io.jsonwebtoken:jjwt-impl:0.12.3")
     implementation("io.jsonwebtoken:jjwt-jackson:0.12.3")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.3")
     runtimeOnly("org.flywaydb:flyway-database-postgresql:11.5.0")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     implementation("org.postgresql:postgresql:42.7.5")
