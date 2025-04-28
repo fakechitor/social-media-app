@@ -4,6 +4,7 @@ import com.fakechitor.socialmediauserservice.dto.mapper.UserMapper
 import com.fakechitor.socialmediauserservice.dto.request.UserRegisterDto
 import com.fakechitor.socialmediauserservice.exception.UserAlreadyExistsException
 import com.fakechitor.socialmediauserservice.exception.UserNotFoundException
+import com.fakechitor.socialmediauserservice.model.User
 import com.fakechitor.socialmediauserservice.repository.UserRepository
 import org.hibernate.exception.ConstraintViolationException
 import org.springframework.http.HttpStatus
@@ -29,4 +30,6 @@ class UserService(
 
     fun findByUsername(username: String) =
         userRepository.findByUsername(username)?.let { userMapper.modelToDto(it) } ?: throw UserNotFoundException("User not found")
+
+    fun findById(id: Long): User = userRepository.findById(id).orElseThrow { UserNotFoundException("User with id $id not found") }
 }
