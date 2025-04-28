@@ -24,4 +24,8 @@ class GlobalExceptionHandler {
     @ExceptionHandler(SubscriptionNotFoundException::class)
     fun handleSubscriptionNotFoundException(e: SubscriptionNotFoundException) =
         ResponseEntity.status(HttpStatus.NOT_FOUND).body(ExceptionMessageDto(e.message))
+
+    @ExceptionHandler(UserAlreadySubscribedException::class)
+    fun handleUserAlreadySubscribedException(e: UserAlreadySubscribedException) =
+        ResponseEntity.status(HttpStatus.CONFLICT).body(ExceptionMessageDto(e.message))
 }

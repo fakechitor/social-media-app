@@ -3,7 +3,7 @@ package com.fakechitor.socialmediauserservice.model
 import jakarta.persistence.*
 
 @Entity
-@Table(name = "subscriptions", schema = "user")
+@Table(name = "subscriptions", schema = "user", uniqueConstraints = [UniqueConstraint(columnNames = ["subscriber_id", "subscribed_to_id"])])
 class Subscription {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

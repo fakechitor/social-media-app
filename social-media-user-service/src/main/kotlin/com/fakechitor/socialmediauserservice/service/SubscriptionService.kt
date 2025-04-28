@@ -4,6 +4,7 @@ import com.fakechitor.socialmediauserservice.dto.mapper.SubscriptionMapper
 import com.fakechitor.socialmediauserservice.dto.response.SubscriptionResponseDto
 import com.fakechitor.socialmediauserservice.event.producer.SubscriptionProducer
 import com.fakechitor.socialmediauserservice.exception.SubscriptionNotFoundException
+import com.fakechitor.socialmediauserservice.exception.UserAlreadySubscribedException
 import com.fakechitor.socialmediauserservice.model.Subscription
 import com.fakechitor.socialmediauserservice.repository.SubscriptionRepository
 import com.fakechitor.socialmediauserservice.util.JwtUtils
@@ -29,10 +30,16 @@ class SubscriptionService(
                 this.subscriber = userService.findById(subscriberId)
                 this.subscribedTo = userService.findById(subscribedId)
             }
-        subscriptionRepository.save(subscription)
+        save(subscription)
         subscriptionProducer.sendSubscriptionEvent(subscriptionMapper.toSubscribeEvent(subscription))
         return subscriptionMapper.toDto(subscription)
     }
+
+    fun save(subscription: Subscription) =
+        runCatching { subscriptionRepository.save(subscription) }.fold(
+            onSuccess = { it },
+            onFailure = { throw UserAlreadySubscribedException("You already subscribed to that user") },
+        )
 
     @Transactional
     fun unsubscribe(
