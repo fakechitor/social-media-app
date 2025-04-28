@@ -6,6 +6,10 @@ spring:
     url: ${POSTGRES_URL}
     username: ${POSTGRES_USER}
     password: ${POSTGRES_PASSWORD}
+  jpa:
+    properties:
+      hibernate:
+        globally_quoted_identifiers : true
   flyway:
     default-schema: user
     schemas: user
