@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
+import org.springframework.web.client.HttpServerErrorException
 
 @RestControllerAdvice
 class GlobalExceptionHandler {
@@ -15,4 +16,8 @@ class GlobalExceptionHandler {
     @ExceptionHandler(UserAlreadyExistsException::class)
     fun handleUserAlreadyExistsException(e: UserAlreadyExistsException) =
         ResponseEntity.status(HttpStatus.CONFLICT).body(ExceptionMessageDto(e.message))
+
+    @ExceptionHandler(HttpServerErrorException::class)
+    fun handleHttpServerErrorException(e: HttpServerErrorException?) =
+        ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ExceptionMessageDto("Something went wrong =("))
 }
