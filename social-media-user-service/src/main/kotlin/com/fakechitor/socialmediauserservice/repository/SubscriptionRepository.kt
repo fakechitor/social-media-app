@@ -9,5 +9,5 @@ interface SubscriptionRepository : JpaRepository<Subscription, Long> {
     fun findByPairOfIds(
         subscriberId: Long,
         subscribedToId: Long,
-    ): Subscription
+    ): Subscription?
 }

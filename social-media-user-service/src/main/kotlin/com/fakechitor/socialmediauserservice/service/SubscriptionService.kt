@@ -3,6 +3,7 @@ package com.fakechitor.socialmediauserservice.service
 import com.fakechitor.socialmediauserservice.dto.mapper.SubscriptionMapper
 import com.fakechitor.socialmediauserservice.dto.response.SubscriptionResponseDto
 import com.fakechitor.socialmediauserservice.event.producer.SubscriptionProducer
+import com.fakechitor.socialmediauserservice.exception.SubscriptionNotFoundException
 import com.fakechitor.socialmediauserservice.model.Subscription
 import com.fakechitor.socialmediauserservice.repository.SubscriptionRepository
 import com.fakechitor.socialmediauserservice.util.JwtUtils
@@ -39,7 +40,9 @@ class SubscriptionService(
         authHeader: String,
     ) {
         val subscriberId = jwtUtils.getUserId(authHeader)
-        val subscription = subscriptionRepository.findByPairOfIds(subscriberId = subscriberId, subscribedToId = subscribedId)
+        val subscription =
+            subscriptionRepository.findByPairOfIds(subscriberId = subscriberId, subscribedToId = subscribedId)
+                ?: throw SubscriptionNotFoundException("You are not subscribed to that user")
         subscriptionRepository.delete(subscription)
         subscriptionProducer.sendUnsubscriptionEvent(subscriptionMapper.toUnsubscribeEvent(subscription))
     }

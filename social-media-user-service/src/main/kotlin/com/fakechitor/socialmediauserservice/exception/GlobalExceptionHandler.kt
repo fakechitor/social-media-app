@@ -20,4 +20,8 @@ class GlobalExceptionHandler {
     @ExceptionHandler(HttpServerErrorException::class)
     fun handleHttpServerErrorException(e: HttpServerErrorException?) =
         ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ExceptionMessageDto("Something went wrong =("))
+
+    @ExceptionHandler(SubscriptionNotFoundException::class)
+    fun handleSubscriptionNotFoundException(e: SubscriptionNotFoundException) =
+        ResponseEntity.status(HttpStatus.NOT_FOUND).body(ExceptionMessageDto(e.message))
 }
