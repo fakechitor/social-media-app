@@ -21,5 +21,7 @@ spring:
       port: 35730
 server:
   port: 8081
+jwt:
+  key: ${JWT_KEY}
 utils:
   internal-secret-token: ${INTERNAL_SECRET_TOKEN}
