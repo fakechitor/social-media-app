@@ -28,4 +28,8 @@ class GlobalExceptionHandler {
     @ExceptionHandler(UserAlreadySubscribedException::class)
     fun handleUserAlreadySubscribedException(e: UserAlreadySubscribedException) =
         ResponseEntity.status(HttpStatus.CONFLICT).body(ExceptionMessageDto(e.message))
+
+    @ExceptionHandler(UserNotFriendException::class)
+    fun handleUserNotFriendException(e: UserNotFriendException) =
+        ResponseEntity.status(HttpStatus.FORBIDDEN).body(ExceptionMessageDto(e.message))
 }
