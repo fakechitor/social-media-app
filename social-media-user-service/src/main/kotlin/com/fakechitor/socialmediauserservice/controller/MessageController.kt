@@ -1,5 +1,7 @@
 package com.fakechitor.socialmediauserservice.controller
 
+import com.fakechitor.socialmediauserservice.docs.open.message.GetMessagesDocs
+import com.fakechitor.socialmediauserservice.docs.open.message.SendMessageDocs
 import com.fakechitor.socialmediauserservice.dto.request.MessageRequestDto
 import com.fakechitor.socialmediauserservice.service.ChatService
 import jakarta.validation.Valid
@@ -12,6 +14,7 @@ class MessageController(
     private val chatService: ChatService,
 ) {
     @GetMapping("/{id}")
+    @GetMessagesDocs
     fun getMessages(
         @PathVariable("id") receiverId: Long,
         @RequestHeader("Authorization") authHeader: String,
@@ -20,6 +23,7 @@ class MessageController(
     )
 
     @PostMapping("/{id}")
+    @SendMessageDocs
     fun sendMessage(
         @PathVariable("id") receiverId: Long,
         @Valid @RequestBody messageRequestDto: MessageRequestDto,
