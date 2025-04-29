@@ -1,13 +1,16 @@
 package com.fakechitor.socialmediauserservice.service
 
+import com.fakechitor.socialmediauserservice.dto.response.FriendStatusDto
 import com.fakechitor.socialmediauserservice.exception.UserNotFriendException
 import com.fakechitor.socialmediauserservice.repository.SubscriptionRepository
 import com.fakechitor.socialmediauserservice.util.FriendshipStatus
+import com.fakechitor.socialmediauserservice.util.JwtUtils
 import org.springframework.stereotype.Service
 
 @Service
 class FriendService(
     private val subscriptionRepository: SubscriptionRepository,
+    private val jwtUtils: JwtUtils,
 ) {
     fun throwIfNotFriends(
         firstUserId: Long,
@@ -19,7 +22,19 @@ class FriendService(
         }
     }
 
-    fun getFriendshipStatus(
+    fun getStatus(
+        requestedUserId: Long,
+        authToken: String,
+    ): FriendStatusDto {
+        val senderId = jwtUtils.getUserId(authToken)
+
+        return FriendStatusDto(
+            requestedUserId = requestedUserId,
+            status = getFriendshipStatus(senderId, requestedUserId),
+        )
+    }
+
+    private fun getFriendshipStatus(
         firstUserId: Long,
         secondUserId: Long,
     ): FriendshipStatus {
