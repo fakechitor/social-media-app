@@ -3,6 +3,7 @@ package com.fakechitor.socialmediauserservice.exception
 import com.fakechitor.socialmediauserservice.dto.response.ExceptionMessageDto
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.client.HttpServerErrorException
@@ -32,4 +33,8 @@ class GlobalExceptionHandler {
     @ExceptionHandler(UserNotFriendException::class)
     fun handleUserNotFriendException(e: UserNotFriendException) =
         ResponseEntity.status(HttpStatus.FORBIDDEN).body(ExceptionMessageDto(e.message))
+
+    @ExceptionHandler(MethodArgumentNotValidException::class)
+    fun handleMethodArgumentNotValidException(e: MethodArgumentNotValidException) =
+        ResponseEntity.status(HttpStatus.BAD_REQUEST).body(mapOf("message" to e.fieldErrors.map { it.defaultMessage }))
 }

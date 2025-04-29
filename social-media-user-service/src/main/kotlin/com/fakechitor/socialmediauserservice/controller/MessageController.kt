@@ -2,6 +2,7 @@ package com.fakechitor.socialmediauserservice.controller
 
 import com.fakechitor.socialmediauserservice.dto.request.MessageRequestDto
 import com.fakechitor.socialmediauserservice.service.ChatService
+import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -21,7 +22,7 @@ class MessageController(
     @PostMapping("/{id}")
     fun sendMessage(
         @PathVariable("id") receiverId: Long,
-        @RequestBody messageRequestDto: MessageRequestDto,
+        @Valid @RequestBody messageRequestDto: MessageRequestDto,
         @RequestHeader("Authorization") authHeader: String,
     ) = ResponseEntity.ok(
         chatService.sendMessage(messageRequestDto, receiverId, authHeader),
