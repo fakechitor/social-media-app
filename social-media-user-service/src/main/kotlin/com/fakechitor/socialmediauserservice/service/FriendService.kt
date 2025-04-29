@@ -23,7 +23,7 @@ class FriendService(
         firstUserId: Long,
         secondUserId: Long,
     ): FriendshipStatus {
-        if (firstUserId == secondUserId) throw UserNotFriendException("You can not send messages to yourself")
+        if (firstUserId == secondUserId) throw UserNotFriendException("Id's should be different")
         val sub1 = subscriptionRepository.findByPairOfIds(firstUserId, secondUserId)
         val sub2 = subscriptionRepository.findByPairOfIds(secondUserId, firstUserId)
         return if (sub1 != null && sub2 != null) {

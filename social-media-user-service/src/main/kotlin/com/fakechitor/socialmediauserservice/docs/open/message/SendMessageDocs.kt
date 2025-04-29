@@ -86,7 +86,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
                         ExampleObject(
                             value = """
                             {
-                                "message": "You can not send messages to yourself"
+                                "message": "Id's should be different"
                             }
                         """,
                         ),
