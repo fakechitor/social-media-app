@@ -5,6 +5,7 @@ import com.fakechitor.socialmediauserservice.dto.response.SubscriptionResponseDt
 import com.fakechitor.socialmediauserservice.event.producer.SubscriptionProducer
 import com.fakechitor.socialmediauserservice.exception.SubscriptionNotFoundException
 import com.fakechitor.socialmediauserservice.exception.UserAlreadySubscribedException
+import com.fakechitor.socialmediauserservice.exception.UserNotFriendException
 import com.fakechitor.socialmediauserservice.model.Subscription
 import com.fakechitor.socialmediauserservice.repository.SubscriptionRepository
 import com.fakechitor.socialmediauserservice.util.JwtUtils
@@ -24,7 +25,8 @@ class SubscriptionService(
         subscribedId: Long,
         authHeader: String,
     ): SubscriptionResponseDto {
-        val subscriberId = jwtUtils.getUserId(authHeader)
+        val subscriberId = jwtUtils.getUserId(authHeader).also { it.throwIfIdsEqual(subscribedId) }
+
         val subscription =
             Subscription().apply {
                 this.subscriber = userService.findById(subscriberId)
@@ -35,7 +37,13 @@ class SubscriptionService(
         return subscriptionMapper.toDto(subscription)
     }
 
-    fun save(subscription: Subscription) =
+    private fun Long.throwIfIdsEqual(secondId: Long) {
+        if (this == secondId) {
+            throw UserNotFriendException("You can not subscribe yourself")
+        }
+    }
+
+    private fun save(subscription: Subscription) =
         runCatching { subscriptionRepository.save(subscription) }.fold(
             onSuccess = { it },
             onFailure = { throw UserAlreadySubscribedException("You already subscribed to that user") },
