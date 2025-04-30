@@ -5,15 +5,22 @@ import com.fakechitor.socialmediapostservice.dto.request.PostRequestDto;
 import com.fakechitor.socialmediapostservice.dto.response.PostResponseDto;
 import com.fakechitor.socialmediapostservice.exception.ForbiddenAccessException;
 import com.fakechitor.socialmediapostservice.exception.PostNotFoundException;
+import com.fakechitor.socialmediapostservice.model.Post;
 import com.fakechitor.socialmediapostservice.repository.PostRepository;
 import com.fakechitor.socialmediapostservice.util.JwtUtils;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+
+
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +30,8 @@ public class PostService {
     private final JwtUtils jwtUtils;
     private final PostRepository postRepository;
     private final EntityManager entityManager;
+
+    private final static int MAX_POSTS_ON_PAGE = 10;
 
     @Transactional
     public PostResponseDto save(PostRequestDto postRequestDto, List<MultipartFile> files, String jwt) {
@@ -73,5 +82,18 @@ public class PostService {
         if (!jwtId.equals(userId)) {
             throw new ForbiddenAccessException("You don`t have access to edit this post");
         }
+    }
+
+    public Page<Post> findSubscribed(Long userId, String sortBy, Integer pageNum) {
+        var sort = getSortType(sortBy);
+        Pageable pageable = PageRequest.of(pageNum - 1, MAX_POSTS_ON_PAGE, sort);
+        return postRepository.findAllSubscribed(userId, pageable);
+    }
+
+    private Sort getSortType(String sortBy) {
+        if (sortBy.equals("desc")) {
+            return Sort.by(Sort.Direction.DESC, "created_at");
+        }
+            return Sort.by(Sort.Direction.ASC, "created_at");
     }
 }
